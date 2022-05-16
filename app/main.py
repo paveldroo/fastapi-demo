@@ -26,6 +26,13 @@ def create_blog(request: schemas.Blog, db: Session = Depends(get_db)):
     return new_blog
 
 
+@app.delete('/blog/{blog_id}', status_code=status.HTTP_204_NO_CONTENT)
+def delete_blog(blog_id, db: Session = Depends(get_db)):
+    db.query(models.Blog).filter(models.Blog.id == blog_id).delete(synchronize_session=False)
+    db.commit()
+    return 'done'
+
+
 @app.get('/blog')
 def get_all_blogs(db: Session = Depends(get_db)):
     blogs = db.query(models.Blog).all()
@@ -37,5 +44,5 @@ def get_blog_by_id(blog_id, response: Response, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == blog_id).first()
     if not blog:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'Blog with the {blog_id} 40 is not available')
+                            detail=f'Blog with the {blog_id} is not available')
     return blog
