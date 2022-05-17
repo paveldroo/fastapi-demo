@@ -8,16 +8,19 @@ from starlette.responses import Response
 from app import models, schemas
 from app.database import get_db
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/blog',
+    tags=['blogs']
+)
 
 
-@router.get('/blog', response_model=List[schemas.ShowBlog], tags=['blogs'])
+@router.get('/', response_model=List[schemas.ShowBlog])
 def get_all_blogs(db: Session = Depends(get_db)):
     blogs = db.query(models.Blog).all()
     return blogs
 
 
-@router.post('/blog', status_code=status.HTTP_201_CREATED, tags=['blogs'])
+@router.post('/', status_code=status.HTTP_201_CREATED)
 def create_blog(request: schemas.Blog, db: Session = Depends(get_db)):
     new_blog = models.Blog(title=request.title, body=request.body, user_id=1)
     db.add(new_blog)
@@ -26,7 +29,7 @@ def create_blog(request: schemas.Blog, db: Session = Depends(get_db)):
     return new_blog
 
 
-@router.get('/blog/{blog_id}', status_code=200, response_model=schemas.ShowBlog, tags=['blogs'])
+@router.get('/{blog_id}', status_code=200, response_model=schemas.ShowBlog)
 def get_blog_by_id(blog_id, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == blog_id).first()
     if not blog:
@@ -35,7 +38,7 @@ def get_blog_by_id(blog_id, db: Session = Depends(get_db)):
     return blog
 
 
-@router.delete('/blog/{blog_id}', tags=['blogs'])
+@router.delete('/{blog_id}')
 def delete_blog(blog_id, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == blog_id)
     if not blog.first():
@@ -45,7 +48,7 @@ def delete_blog(blog_id, db: Session = Depends(get_db)):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.put('/blog/{blog_id}', status_code=status.HTTP_202_ACCEPTED, tags=['blogs'])
+@router.put('/{blog_id}', status_code=status.HTTP_202_ACCEPTED)
 def update_blog(blog_id, request: schemas.Blog, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == blog_id)
     if not blog.first():
