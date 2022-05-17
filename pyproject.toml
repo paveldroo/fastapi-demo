@@ -10,6 +10,7 @@ fastapi = "^0.78.0"
 uvicorn = { extras = ["standard"], version = "^0.17.6" }
 SQLAlchemy = "^1.4.36"
 passlib = { extras = ["bcrypt"], version = "^1.7.4" }
+python-jose = { extras = ["cryptography"], version = "^3.3.0" }
 
 [tool.poetry.dev-dependencies]
 
