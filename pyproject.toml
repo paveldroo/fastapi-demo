@@ -11,6 +11,7 @@ uvicorn = { extras = ["standard"], version = "^0.17.6" }
 SQLAlchemy = "^1.4.36"
 passlib = { extras = ["bcrypt"], version = "^1.7.4" }
 python-jose = { extras = ["cryptography"], version = "^3.3.0" }
+python-multipart = "^0.0.5"
 
 [tool.poetry.dev-dependencies]
 
